@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title> Customer Survey Form</title>
+    <style>
+      body {
+  font-family: Arial, sans-serif;
+  background: rgb(238, 174, 202);
+  background: radial-gradient(
+    circle,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(44, 136, 232, 1) 44%,
+    rgba(23, 92, 173, 1) 100%
+  );
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-style: oblique;
+}
+
+.container {
+  background-color: #fff;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+ /* Vertically center align elements */
+  justify-content: space-between; /* Buttons at different sides */
+}
+
+label {
+  display: inline-block; /* Make labels inline-block to appear next to inputs */
+  font-weight: bold;
+  width: 30%; /* Adjust as needed to control label width */
+}
+
+input[type="text"],
+input[type="date"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 75%; /* Adjust as needed to control input width */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+select {
+  /* Set the width of the select element to match other inputs */
+  width: calc(80% - 2px); /* Adjust the width as needed, considering the border */
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.button-container {
+  display: flex;
+}
+
+.button-container:first-child {
+  margin-right: 10px; /* Add margin to create space between the buttons */
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#popupDetails {
+  margin-top: 10px;
+}
+
+.close:hover {
+  color: #f44336;
+}
+
+.gender-checkboxes {
+  display: flex;
+  align-items: center;
+}
+
+.gender-checkboxes input[type="checkbox"] {
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+}
+
+    </style>
+  </head>
+  <body>
+    <h1> Customer Survey Form</h1>
+    <div class="container">
+      
+      <form id="surveyForm">
+        <div class="form-group">
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" name="firstName" required />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName" required />
+        </div>
+        <div class="form-group">
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required />
+        </div>
+        <div class="form-group">
+          <label for="country">Country:</label>
+          <select id="country" name="country" required>
+            <option value="">Select Country</option>
+            <option value="usa">INDIA</option>
+            <option value="usa">AUSTRALIA</option>
+            <option value="usa">RUSSIA</option>
+            <option value="usa">USA</option>
+            <option value="canada">Canada</option>
+            <option value="uk">UK</option>
+            <!-- Add more country options as needed -->
+          </select>
+        </div>
+       
+        <div class="form-group">
+          <label>Gender:</label>
+          <div class="gender-checkboxes">
+            <input type="checkbox" id="male" name="gender" value="Male" />
+            <label for="male">Male</label>
+            <input type="checkbox" id="female" name="gender" value="Female" />
+            <label for="female">Female</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profession">Profession:</label>
+          <input type="text" id="profession" name="profession" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="mobile">Mobile Number:</label>
+          <input
+            type="tel"
+            id="mobile"
+            name="mobile"
+            pattern="[0-9]{10}"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <div class="button-container">
+            <button type="button" id="resetBtn">Reset</button>
+          </div>
+          <div class="button-container">
+            <button type="button" id="submitBtn">Submit</button>
+          </div>
+         
+        </div>
+        
+      </form>
+    </div>
+    <div class="popup" id="popup">
+      <div class="popup-content">
+        <span class="close" id="closePopup">&times;</span>
+        <h2>Survey Submission Details</h2>
+        <div id="popupDetails"></div>
+      </div>
+    </div>
+    <script >document.addEventListener('DOMContentLoaded', function () {
+      const surveyForm = document.getElementById('surveyForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const popup = document.getElementById('popup');
+      const closePopup = document.getElementById('closePopup');
+      const popupDetails = document.getElementById('popupDetails');
+    
+      submitBtn.addEventListener('click', function () {
+        if (surveyForm.checkValidity()) {
+          const formData = new FormData(surveyForm);
+          let detailsText = '';
+          for (const [name, value] of formData.entries()) {
+            detailsText += `${name}: ${value}\n`;
+          }
+          popupDetails.textContent = detailsText;
+          popup.style.display = 'block';
+        } else {
+          alert('Please fill in all required fields.');
+        }
+      });
+    
+      resetBtn.addEventListener('click', function () {
+        surveyForm.reset();
+      });
+    
+      closePopup.addEventListener('click', function () {
+        popup.style.display = 'none';
+        surveyForm.reset();
+      });
+    
+      window.addEventListener('click', function (event) {
+        if (event.target === popup) {
+          popup.style.display = 'none';
+        }
+      });
+    });
+    </script>
+  </body>
+</html>
